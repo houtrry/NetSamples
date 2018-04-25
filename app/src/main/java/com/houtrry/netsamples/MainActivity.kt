@@ -2,7 +2,7 @@ package com.houtrry.netsamples
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.houtrry.okhttpsamples.OkHttpActivity
+import com.houtrry.okhttpsamples.ui.OkHttpActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import com.houtrry.basiclibrary.utils.startAty
 

@@ -9,7 +9,7 @@ import android.util.Log
  */
 object LogUtils {
 
-    var showLog = true
+    private var showLog = true
 
     fun d(message:String){
         if (showLog) {

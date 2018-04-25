@@ -1,8 +1,9 @@
-package com.houtrry.okhttpsamples
+package com.houtrry.okhttpsamples.ui
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.houtrry.basiclibrary.utils.startAty
+import com.houtrry.okhttpsamples.R
 import kotlinx.android.synthetic.main.activity_okhttp.*
 
 class OkHttpActivity : AppCompatActivity() {
