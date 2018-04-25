@@ -1,10 +1,10 @@
 package com.houtrry.okhttpsamples.ui
 
 import android.os.Bundle
-import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.houtrry.basiclibrary.utils.FileUtils
 import com.houtrry.basiclibrary.utils.LogUtils
 import com.houtrry.okhttpsamples.R
 import com.houtrry.okhttpsamples.bean.ArticleListBean
@@ -24,7 +24,8 @@ class CommonOkHttpUsedActivity : AppCompatActivity() {
 
         btn_request_get.setOnClickListener { commonUsed() }
         btn_request_post_common.setOnClickListener { commonPost() }
-        btn_request_post_upload.setOnClickListener { uploadPost() }
+        btn_request_post_upload_only_file.setOnClickListener { uploadPostOnlyFile() }
+        btn_request_post_upload_file_and_params.setOnClickListener { uploadPostFileAndParams() }
         btn_request_post_download.setOnClickListener { downloadPost() }
     }
 
@@ -85,14 +86,14 @@ class CommonOkHttpUsedActivity : AppCompatActivity() {
         })
     }
 
-    private fun uploadPost() {
+    private fun uploadPostOnlyFile() {
         val url = "http://www.baidu.com"
         val okHttpClient = OkHttpClient()
         val mediaType = MediaType.parse("File/*")
-        val filePath = Environment.getExternalStorageDirectory().getPath() + "/" + "app-release.apk"
+        val filePath = FileUtils.getInnerSdCardPath() + "/" + "app-release.apk"
         val file = File(filePath)
-        LogUtils.e("===>>>filePath: "+filePath)
-        LogUtils.e("===>>>size: "+file.length())
+        LogUtils.e("===>>>uploadPostOnlyFile, filePath: "+filePath)
+        LogUtils.e("===>>>uploadPostOnlyFile, size: "+file.length())
         val requestBody = RequestBody.create(mediaType, file)
         val request = Request.Builder()
                 .url(url)
@@ -101,28 +102,78 @@ class CommonOkHttpUsedActivity : AppCompatActivity() {
 
         okHttpClient.newCall(request).enqueue(object : Callback{
             override fun onFailure(call: Call?, e: IOException?) {
-                LogUtils.e("===>>>uploadPost, onFailure, e: "+e)
+                LogUtils.e("===>>>uploadPostOnlyFile, onFailure, e: "+e)
             }
 
             override fun onResponse(call: Call?, response: Response?) {
                 if (response != null && response.isSuccessful) {
                     val body = response.body()?.string()
-                    LogUtils.e("===>>>uploadPost, onResponse, body: " + body)
+                    LogUtils.e("===>>>uploadPostOnlyFile, onResponse, body: " + body)
                 }else{
-                    LogUtils.e("===>>>uploadPost, onResponse, 失败， 没数据  ")
+                    LogUtils.e("===>>>uploadPostOnlyFile, onResponse, 失败， 没数据  ")
                 }
             }
 
         })
     }
 
+    private fun uploadPostFileAndParams() {
+        val url = "http://www.baidu.com"
+        val okHttpClient = OkHttpClient()
+        val filePath = FileUtils.getInnerSdCardPath() + "/" + "app-release.apk"
+        val file = File(filePath)
+        LogUtils.e("===>>>uploadPostFileAndParams, filePath: "+filePath)
+        LogUtils.e("===>>>uploadPostFileAndParams, size: "+file.length())
+
+        val multipartBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("groupId", "12")
+                .addFormDataPart("title", "upload test")
+                .addFormDataPart("file", filePath, RequestBody.create(MediaType.parse("file/*"), file))
+                .build()
+
+
+
+        val request = Request.Builder()
+                .url(url)
+                .post(multipartBody)
+                .build()
+
+        okHttpClient.newCall(request).enqueue(object : Callback{
+            override fun onFailure(call: Call?, e: IOException?) {
+                LogUtils.e("===>>>uploadPostFileAndParams, onFailure, e: "+e)
+            }
+
+            override fun onResponse(call: Call?, response: Response?) {
+                if (response != null && response.isSuccessful) {
+                    val body = response.body()?.string()
+                    LogUtils.e("===>>>uploadPostFileAndParams, onResponse, body: " + body)
+                }else{
+                    LogUtils.e("===>>>uploadPostFileAndParams, onResponse, 失败， 没数据  ")
+                }
+            }
+
+        })
+    }
+
+    //okHttp
+    //http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0106/2275.html
+    //https://blog.csdn.net/lmj623565791/article/details/47911083
+    //https://blog.csdn.net/lmj623565791/article/details/49734867
     private fun downloadPost() {
         //https://blog.csdn.net/fightingXia/article/details/70947701
 
         val okHttpClient = OkHttpClient()
 
 
+        runOnUiThread(object :Runnable{
+            override fun run() {
+
+            }
+        })
     }
 
 
+    // Retrofit
+    //https://blog.csdn.net/lmj623565791/article/details/51304204
 }
