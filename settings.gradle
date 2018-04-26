@@ -1,1 +1,1 @@
-include ':app', ':okhttpsamples', ':basiclibrary'
+include ':app', ':okhttpsamples', ':basiclibrary', ':okhttputils'

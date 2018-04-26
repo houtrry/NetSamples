@@ -13,5 +13,6 @@ class OkHttpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_okhttp)
 
         btn_common_used.setOnClickListener { startAty(CommonOkHttpUsedActivity::class.java) }
+        btn_ok_http_utils_used.setOnClickListener { startAty(OkHttpUtilsActivity::class.java) }
     }
 }

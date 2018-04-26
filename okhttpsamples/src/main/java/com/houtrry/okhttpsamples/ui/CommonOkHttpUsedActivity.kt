@@ -24,6 +24,7 @@ class CommonOkHttpUsedActivity : AppCompatActivity() {
 
         btn_request_get.setOnClickListener { commonUsed() }
         btn_request_post_common.setOnClickListener { commonPost() }
+        btn_request_post_upload_only_json.setOnClickListener { uploadPostOnlyJson() }
         btn_request_post_upload_only_file.setOnClickListener { uploadPostOnlyFile() }
         btn_request_post_upload_file_and_params.setOnClickListener { uploadPostFileAndParams() }
         btn_request_post_download.setOnClickListener { downloadPost() }
@@ -46,7 +47,7 @@ class CommonOkHttpUsedActivity : AppCompatActivity() {
                     val type = object : TypeToken<ResponseResult<ArticleListBean>>() {}.type
                     val responseString = response?.body()?.string()
                     val responseResult = gson.fromJson<ResponseResult<ArticleListBean>>(responseString, type)
-                    LogUtils.e("===>responseResult: "+responseResult)
+                    LogUtils.e("===>responseResult: $responseResult")
                     LogUtils.e("get请求成功")
                 } else {
                     LogUtils.e("get请求失败, 没有返回数据")
@@ -77,7 +78,7 @@ class CommonOkHttpUsedActivity : AppCompatActivity() {
                     val gson = Gson()
                     val type = object :TypeToken<ResponseResult<LoginBean>>(){}.type
                     val responseResult = gson.fromJson<ResponseResult<LoginBean>>(response?.body()?.string(), type)
-                    LogUtils.e("===>>>responseResult: "+responseResult)
+                    LogUtils.e("===>>>responseResult: $responseResult")
                     LogUtils.e("===>>>responseResult, 请求成功 ")
                 } else {
                     LogUtils.e("===>>>responseResult, 请求失败, 没数据 ")
@@ -91,7 +92,7 @@ class CommonOkHttpUsedActivity : AppCompatActivity() {
         val okHttpClient = OkHttpClient()
         val mediaType = MediaType.parse("application/json; charset=utf-8")
 
-        val jsonString = ""
+        val jsonString = "{'username':'houtrry'}"
 
         val requestBody = RequestBody.create(mediaType, jsonString)
         val request = Request.Builder()
@@ -101,13 +102,13 @@ class CommonOkHttpUsedActivity : AppCompatActivity() {
 
         okHttpClient.newCall(request).enqueue(object : Callback{
             override fun onFailure(call: Call?, e: IOException?) {
-                LogUtils.e("===>>>uploadPostOnlyFile, onFailure, e: "+e)
+                LogUtils.e("===>>>uploadPostOnlyFile, onFailure, e: $e")
             }
 
             override fun onResponse(call: Call?, response: Response?) {
                 if (response != null && response.isSuccessful) {
                     val body = response.body()?.string()
-                    LogUtils.e("===>>>uploadPostOnlyFile, onResponse, body: " + body)
+                    LogUtils.e("===>>>uploadPostOnlyFile, onResponse, body: $body")
                 }else{
                     LogUtils.e("===>>>uploadPostOnlyFile, onResponse, 失败， 没数据  ")
                 }
@@ -122,7 +123,7 @@ class CommonOkHttpUsedActivity : AppCompatActivity() {
         val mediaType = MediaType.parse("File/*")
         val filePath = FileUtils.getInnerSdCardPath() + "/" + "app-release.apk"
         val file = File(filePath)
-        LogUtils.e("===>>>uploadPostOnlyFile, filePath: "+filePath)
+        LogUtils.e("===>>>uploadPostOnlyFile, filePath: $filePath")
         LogUtils.e("===>>>uploadPostOnlyFile, size: "+file.length())
         val requestBody = RequestBody.create(mediaType, file)
         val request = Request.Builder()
@@ -132,13 +133,13 @@ class CommonOkHttpUsedActivity : AppCompatActivity() {
 
         okHttpClient.newCall(request).enqueue(object : Callback{
             override fun onFailure(call: Call?, e: IOException?) {
-                LogUtils.e("===>>>uploadPostOnlyFile, onFailure, e: "+e)
+                LogUtils.e("===>>>uploadPostOnlyFile, onFailure, e: $e")
             }
 
             override fun onResponse(call: Call?, response: Response?) {
                 if (response != null && response.isSuccessful) {
                     val body = response.body()?.string()
-                    LogUtils.e("===>>>uploadPostOnlyFile, onResponse, body: " + body)
+                    LogUtils.e("===>>>uploadPostOnlyFile, onResponse, body: $body")
                 }else{
                     LogUtils.e("===>>>uploadPostOnlyFile, onResponse, 失败， 没数据  ")
                 }
@@ -152,7 +153,7 @@ class CommonOkHttpUsedActivity : AppCompatActivity() {
         val okHttpClient = OkHttpClient()
         val filePath = FileUtils.getInnerSdCardPath() + "/" + "app-release.apk"
         val file = File(filePath)
-        LogUtils.e("===>>>uploadPostFileAndParams, filePath: "+filePath)
+        LogUtils.e("===>>>uploadPostFileAndParams, filePath: $filePath")
         LogUtils.e("===>>>uploadPostFileAndParams, size: "+file.length())
 
         val multipartBody = MultipartBody.Builder()
@@ -171,13 +172,13 @@ class CommonOkHttpUsedActivity : AppCompatActivity() {
 
         okHttpClient.newCall(request).enqueue(object : Callback{
             override fun onFailure(call: Call?, e: IOException?) {
-                LogUtils.e("===>>>uploadPostFileAndParams, onFailure, e: "+e)
+                LogUtils.e("===>>>uploadPostFileAndParams, onFailure, e: $e")
             }
 
             override fun onResponse(call: Call?, response: Response?) {
                 if (response != null && response.isSuccessful) {
                     val body = response.body()?.string()
-                    LogUtils.e("===>>>uploadPostFileAndParams, onResponse, body: " + body)
+                    LogUtils.e("===>>>uploadPostFileAndParams, onResponse, body: $body")
                 }else{
                     LogUtils.e("===>>>uploadPostFileAndParams, onResponse, 失败， 没数据  ")
                 }

@@ -3,13 +3,15 @@
           package="com.houtrry.okhttpsamples">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application>
         <activity android:name=".ui.OkHttpActivity">
         </activity>
         <activity android:name=".ui.CommonOkHttpUsedActivity">
+        </activity>
+        <activity android:name=".ui.OkHttpUtilsActivity">
         </activity>
     </application>
 
