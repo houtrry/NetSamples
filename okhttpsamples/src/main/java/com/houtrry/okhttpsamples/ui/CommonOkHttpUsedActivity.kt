@@ -86,6 +86,36 @@ class CommonOkHttpUsedActivity : AppCompatActivity() {
         })
     }
 
+    private fun uploadPostOnlyJson() {
+        val url = "http://www.baidu.com"
+        val okHttpClient = OkHttpClient()
+        val mediaType = MediaType.parse("application/json; charset=utf-8")
+
+        val jsonString = ""
+
+        val requestBody = RequestBody.create(mediaType, jsonString)
+        val request = Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build()
+
+        okHttpClient.newCall(request).enqueue(object : Callback{
+            override fun onFailure(call: Call?, e: IOException?) {
+                LogUtils.e("===>>>uploadPostOnlyFile, onFailure, e: "+e)
+            }
+
+            override fun onResponse(call: Call?, response: Response?) {
+                if (response != null && response.isSuccessful) {
+                    val body = response.body()?.string()
+                    LogUtils.e("===>>>uploadPostOnlyFile, onResponse, body: " + body)
+                }else{
+                    LogUtils.e("===>>>uploadPostOnlyFile, onResponse, 失败， 没数据  ")
+                }
+            }
+
+        })
+    }
+
     private fun uploadPostOnlyFile() {
         val url = "http://www.baidu.com"
         val okHttpClient = OkHttpClient()
