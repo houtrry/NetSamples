@@ -26,7 +26,7 @@ class OkHttpUtilsActivity : AppCompatActivity() {
 
     private fun commonUsed() {
         val url = "http://www.wanandroid.com/article/list/0/json"
-        OkHttpUtils.getInstance().get(url, object :ApiResponseCallback<ResponseResult<ArticleListBean>>{
+        OkHttpUtils.getInstance().get(url, object : ApiResponseCallback<ResponseResult<ArticleListBean>> {
             override fun onSuccess(data: ResponseResult<ArticleListBean>) {
                 LogUtils.d("onSuccess, data is $data")
             }
@@ -36,6 +36,13 @@ class OkHttpUtilsActivity : AppCompatActivity() {
             }
 
         })
+
+
+        OkHttpUtils.getInstance().get<ResponseResult<ArticleListBean>>(url, {data -> run {
+            LogUtils.d("success, data is $data")
+        }}, {request, e -> run {
+            LogUtils.d("failure, request: $request, e is ${e?.message}")
+        }})
     }
 
     private fun commonPost() {

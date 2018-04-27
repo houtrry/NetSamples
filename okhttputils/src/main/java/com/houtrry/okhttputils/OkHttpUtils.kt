@@ -16,7 +16,7 @@ class OkHttpUtils {
         val INSTANCE = OkHttpUtils()
     }
 
-    private val okHttpClient: OkHttpClient by lazy {
+    val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .build()
@@ -35,12 +35,13 @@ class OkHttpUtils {
     }
 
 
-    fun <T> get(url: String, callback: ApiResponseCallback<T>) {
+    inline fun <reified T> get(url: String, callback: ApiResponseCallback<T>) {
         val request = Request.Builder()
                 .url(url)
                 .build()
 
         okHttpClient.newCall(request).enqueue(object : Callback {
+
             override fun onFailure(call: Call?, e: IOException?) {
                 callback.onFailure(request, e)
             }
@@ -62,5 +63,51 @@ class OkHttpUtils {
             }
 
         })
+    }
+
+
+    /**
+     * 上面是按java的套路来写的，
+     * 这个方法与上面的作用一样，只是不按照java的回调来写。省去了定义接口类。
+     */
+   inline fun <reified T> get(url: String, crossinline success: (data: T) -> Unit, crossinline failure: ((request: Request?, e: Exception?) -> Unit)) {
+        val request = Request.Builder()
+                .url(url)
+                .build()
+
+        okHttpClient.newCall(request).enqueue(object : Callback {
+
+            override fun onFailure(call: Call?, e: IOException?) {
+                failure.invoke(request, e)
+            }
+
+            override fun onResponse(call: Call?, response: Response?) {
+                if (response != null && response.isSuccessful) {
+                    val bodyString = response.body()?.string()
+                    if (bodyString == null) {
+                        failure.invoke(call?.request(), IOException("response is null"))
+                        return
+                    }
+                    val type = object : TypeToken<T>() {}.type
+                    System.out.println("type is $type")
+
+                    success.invoke(GsonUtils.getInstance().fromJson(bodyString, type))
+                } else {
+                    failure.invoke(call?.request(), IOException("response is $response"))
+                }
+            }
+
+        })
+    }
+
+    inline fun <reified T> post(url: String, crossinline success:(data:T) -> Unit, crossinline failure: (request: Request?, e: Exception?) -> Unit) {
+        val requestBody = FormBody.Builder().build()
+
+        val request = Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build()
+
+
     }
 }
